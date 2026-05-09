@@ -14,6 +14,10 @@ public class ClickableObject : MonoBehaviour
     [Header("Visual Feedback")]
     [SerializeField] private GameObject glowObject;
 
+    [Header("Bunny Interaction")]
+    [SerializeField] private BunnyGridMover bunnyMover;
+    [SerializeField] private Transform bunnyTargetPoint;
+
     private Collider2D clickCollider;
     private Camera mainCamera;
     private bool isHovering;
@@ -54,6 +58,11 @@ public class ClickableObject : MonoBehaviour
     {
         Debug.Log("Clicked: " + objectName);
         Debug.Log(interactionMessage);
+
+        if (bunnyMover != null && bunnyTargetPoint != null)
+        {
+            bunnyMover.MoveToWorldPosition(bunnyTargetPoint.position);
+        }
 
         if (disableAfterClick)
         {
