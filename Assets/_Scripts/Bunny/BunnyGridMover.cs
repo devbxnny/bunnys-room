@@ -8,18 +8,32 @@ public class BunnyGridMover : MonoBehaviour
     [SerializeField] private float tileSize = 1f;
     [SerializeField] private float moveSpeed = 4f;
 
+    [Header("Sprites")]
+    [SerializeField] private Sprite idleFront;
+    [SerializeField] private Sprite idleBack;
+    [SerializeField] private Sprite idleLeft;
+    [SerializeField] private Sprite idleRight;
+
     [Header("Movement State")]
     [SerializeField] private bool isMoving;
 
+    private SpriteRenderer spriteRenderer;
     private Vector2Int currentGridPosition;
     private Queue<Vector2Int> pathQueue = new Queue<Vector2Int>();
 
     public bool IsMoving => isMoving;
 
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
     private void Start()
     {
         currentGridPosition = WorldToGrid(transform.position);
         transform.position = GridToWorld(currentGridPosition);
+
+        SetIdleSprite(Vector2.down);
     }
 
     public void MoveToWorldPosition(Vector3 worldTarget)
@@ -61,6 +75,9 @@ public class BunnyGridMover : MonoBehaviour
             Vector2Int nextGridPosition = pathQueue.Dequeue();
             Vector3 nextWorldPosition = GridToWorld(nextGridPosition);
 
+            Vector2 direction = nextGridPosition - currentGridPosition;
+            SetIdleSprite(direction);
+
             yield return MoveOneTile(nextWorldPosition);
 
             currentGridPosition = nextGridPosition;
@@ -71,16 +88,6 @@ public class BunnyGridMover : MonoBehaviour
 
     private IEnumerator MoveOneTile(Vector3 targetPosition)
     {
-        Vector3 startPosition = transform.position;
-
-        Vector2 direction = targetPosition - startPosition;
-
-        // Later this direction can drive animations:
-        // direction.x > 0 = walk right
-        // direction.x < 0 = walk left
-        // direction.y > 0 = walk up
-        // direction.y < 0 = walk down
-
         while (Vector3.Distance(transform.position, targetPosition) > 0.01f)
         {
             transform.position = Vector3.MoveTowards(
@@ -93,6 +100,28 @@ public class BunnyGridMover : MonoBehaviour
         }
 
         transform.position = targetPosition;
+    }
+
+    private void SetIdleSprite(Vector2 direction)
+    {
+        if (spriteRenderer == null) return;
+
+        if (direction.x > 0 && idleRight != null)
+        {
+            spriteRenderer.sprite = idleRight;
+        }
+        else if (direction.x < 0 && idleLeft != null)
+        {
+            spriteRenderer.sprite = idleLeft;
+        }
+        else if (direction.y > 0 && idleBack != null)
+        {
+            spriteRenderer.sprite = idleBack;
+        }
+        else if (direction.y < 0 && idleFront != null)
+        {
+            spriteRenderer.sprite = idleFront;
+        }
     }
 
     private Vector2Int WorldToGrid(Vector3 worldPosition)
