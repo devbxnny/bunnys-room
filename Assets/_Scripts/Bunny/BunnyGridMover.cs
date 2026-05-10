@@ -21,6 +21,8 @@ public class BunnyGridMover : MonoBehaviour
     private Vector2Int currentGridPosition;
     private Queue<Vector2Int> pathQueue = new Queue<Vector2Int>();
 
+    private System.Action onArrivedCallback;
+
     public bool IsMoving => isMoving;
 
     private void Awake()
@@ -36,15 +38,16 @@ public class BunnyGridMover : MonoBehaviour
         SetIdleSprite(Vector2.down);
     }
 
-    public void MoveToWorldPosition(Vector3 worldTarget)
+    public void MoveToWorldPosition(Vector3 worldTarget, System.Action onArrived = null)
     {
         Vector2Int targetGridPosition = WorldToGrid(worldTarget);
-        MoveToGridPosition(targetGridPosition);
+        MoveToGridPosition(targetGridPosition, onArrived);
     }
 
-    public void MoveToGridPosition(Vector2Int targetGridPosition)
+    public void MoveToGridPosition(Vector2Int targetGridPosition, System.Action onArrived = null)
     {
         pathQueue.Clear();
+        onArrivedCallback = onArrived;
 
         Vector2Int tempPosition = currentGridPosition;
 
@@ -84,6 +87,9 @@ public class BunnyGridMover : MonoBehaviour
         }
 
         isMoving = false;
+
+        onArrivedCallback?.Invoke();
+        onArrivedCallback = null;
     }
 
     private IEnumerator MoveOneTile(Vector3 targetPosition)

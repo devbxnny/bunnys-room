@@ -5,7 +5,9 @@ public class ClickableObject : MonoBehaviour
 {
     [Header("Object Info")]
     [SerializeField] private string objectName = "Hairbrush";
-    [SerializeField] private string interactionMessage = "Bunny looks at the hairbrush.";
+
+    [TextArea(2, 4)]
+    [SerializeField] private string[] dialogueLines;
 
     [Header("Click Settings")]
     [SerializeField] private bool canClick = true;
@@ -17,6 +19,9 @@ public class ClickableObject : MonoBehaviour
     [Header("Bunny Interaction")]
     [SerializeField] private BunnyGridMover bunnyMover;
     [SerializeField] private Transform bunnyTargetPoint;
+
+    [Header("Dialogue")]
+    [SerializeField] private DialogueManager dialogueManager;
 
     private Collider2D clickCollider;
     private Camera mainCamera;
@@ -57,11 +62,14 @@ public class ClickableObject : MonoBehaviour
     private void Interact()
     {
         Debug.Log("Clicked: " + objectName);
-        Debug.Log(interactionMessage);
 
         if (bunnyMover != null && bunnyTargetPoint != null)
         {
-            bunnyMover.MoveToWorldPosition(bunnyTargetPoint.position);
+            bunnyMover.MoveToWorldPosition(bunnyTargetPoint.position, ShowObjectDialogue);
+        }
+        else
+        {
+            ShowObjectDialogue();
         }
 
         if (disableAfterClick)
@@ -72,6 +80,14 @@ public class ClickableObject : MonoBehaviour
             {
                 glowObject.SetActive(false);
             }
+        }
+    }
+
+    private void ShowObjectDialogue()
+    {
+        if (dialogueManager != null)
+        {
+            dialogueManager.StartDialogue(dialogueLines);
         }
     }
 }
