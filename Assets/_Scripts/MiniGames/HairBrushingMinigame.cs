@@ -17,8 +17,8 @@ public class HairBrushingMinigame : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private float brushFillSpeed = 0.4f;
     [SerializeField] private float slideDuration = 0.45f;
-    [SerializeField] private Vector2 hiddenPosition = new Vector2(0f, -600f);
-    [SerializeField] private Vector2 shownPosition = new Vector2(0f, 120f);
+    [SerializeField] private Vector2 hiddenPosition = new Vector2(0f, -800f);
+    [SerializeField] private Vector2 shownPosition = new Vector2(0f, 0f);
 
     private bool isMinigameActive;
     private bool isComplete;
