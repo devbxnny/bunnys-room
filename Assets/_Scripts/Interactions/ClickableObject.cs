@@ -23,9 +23,13 @@ public class ClickableObject : MonoBehaviour
     [Header("Dialogue")]
     [SerializeField] private DialogueManager dialogueManager;
 
+    [SerializeField] private HairBrushingMinigame hairBrushingMinigame;
+    [SerializeField] private bool startsHairBrushingMinigame;
+
     private Collider2D clickCollider;
     private Camera mainCamera;
     private bool isHovering;
+
 
     private void Awake()
     {
@@ -85,7 +89,14 @@ public class ClickableObject : MonoBehaviour
 
     private void ShowObjectDialogue()
     {
-        if (dialogueManager != null)
+        if (dialogueManager == null)
+            return;
+
+        if (startsHairBrushingMinigame && hairBrushingMinigame != null)
+        {
+            dialogueManager.StartDialogue(dialogueLines, hairBrushingMinigame.StartMinigame);
+        }
+        else
         {
             dialogueManager.StartDialogue(dialogueLines);
         }

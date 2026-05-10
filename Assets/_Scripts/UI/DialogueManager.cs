@@ -24,6 +24,8 @@ public class DialogueManager : MonoBehaviour
     private bool isTyping;
     private Coroutine typingCoroutine;
 
+    private System.Action onDialogueFinished;
+
     private void Start()
     {
         HideDialogue();
@@ -40,13 +42,14 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    public void StartDialogue(string[] lines)
+    public void StartDialogue(string[] lines, System.Action onFinished = null)
     {
         if (lines == null || lines.Length == 0)
             return;
 
         currentLines = lines;
         currentLineIndex = 0;
+        onDialogueFinished = onFinished;
 
         dialoguePanel.SetActive(true);
         ShowLine(currentLines[currentLineIndex]);
@@ -114,7 +117,9 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
+            System.Action finishedCallback = onDialogueFinished;
             HideDialogue();
+            finishedCallback?.Invoke();
         }
     }
 
@@ -141,6 +146,7 @@ public class DialogueManager : MonoBehaviour
             dialogueText.text = "";
         }
 
+        onDialogueFinished = null;
         isTyping = false;
         currentLines = null;
         currentLineIndex = 0;
