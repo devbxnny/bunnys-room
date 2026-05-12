@@ -2,12 +2,24 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
     [Header("UI References")]
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TMP_Text dialogueText;
+    [SerializeField] private Image portraitImage;
+
+    [Header("Bunny Mood Portraits")]
+    [SerializeField] private Sprite neutralPortrait;
+    [SerializeField] private Sprite happyPortrait;
+    [SerializeField] private Sprite joyfulPortrait;
+    [SerializeField] private Sprite sadPortrait;
+    [SerializeField] private Sprite annoyedPortrait;
+    [SerializeField] private Sprite blushingPortrait;
+    [SerializeField] private Sprite embarrassedPortrait;
+    [SerializeField] private Sprite noFacePortrait;
 
     [Header("Typewriter Settings")]
     [SerializeField] private float letterDelay = 0.035f;
@@ -19,7 +31,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private float minPitch = 0.95f;
     [SerializeField] private float maxPitch = 1.08f;
 
-    private string[] currentLines;
+    private DialogueLine[] currentLines;
     private int currentLineIndex;
     private bool isTyping;
     private Coroutine typingCoroutine;
@@ -42,7 +54,7 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    public void StartDialogue(string[] lines, System.Action onFinished = null)
+    public void StartDialogue(DialogueLine[] lines, System.Action onFinished = null)
     {
         if (lines == null || lines.Length == 0)
             return;
@@ -55,14 +67,56 @@ public class DialogueManager : MonoBehaviour
         ShowLine(currentLines[currentLineIndex]);
     }
 
-    private void ShowLine(string line)
+    private void ShowLine(DialogueLine line)
     {
         if (typingCoroutine != null)
         {
             StopCoroutine(typingCoroutine);
         }
 
-        typingCoroutine = StartCoroutine(TypeLine(line));
+        SetPortrait(line.mood);
+        typingCoroutine = StartCoroutine(TypeLine(line.text));
+    }
+
+    private void SetPortrait(BunnyMood mood)
+    {
+        if (portraitImage == null)
+            return;
+
+        switch (mood)
+        {
+            case BunnyMood.Happy:
+                portraitImage.sprite = happyPortrait;
+                break;
+
+            case BunnyMood.Joyful:
+                portraitImage.sprite = joyfulPortrait;
+                break;
+
+            case BunnyMood.Sad:
+                portraitImage.sprite = sadPortrait;
+                break;
+
+            case BunnyMood.Annoyed:
+                portraitImage.sprite = annoyedPortrait;
+                break;
+
+            case BunnyMood.Blushing:
+                portraitImage.sprite = blushingPortrait;
+                break;
+
+            case BunnyMood.Embarrassed:
+                portraitImage.sprite = embarrassedPortrait;
+                break;
+
+            case BunnyMood.NoFace:
+                portraitImage.sprite = noFacePortrait;
+                break;
+
+            default:
+                portraitImage.sprite = neutralPortrait;
+                break;
+        }
     }
 
     private IEnumerator TypeLine(string line)
@@ -130,7 +184,7 @@ public class DialogueManager : MonoBehaviour
             StopCoroutine(typingCoroutine);
         }
 
-        dialogueText.text = currentLines[currentLineIndex];
+        dialogueText.text = currentLines[currentLineIndex].text;
         isTyping = false;
     }
 

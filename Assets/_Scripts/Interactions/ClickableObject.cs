@@ -6,8 +6,7 @@ public class ClickableObject : MonoBehaviour
     [Header("Object Info")]
     [SerializeField] private string objectName = "Hairbrush";
 
-    [TextArea(2, 4)]
-    [SerializeField] private string[] dialogueLines;
+    [SerializeField] private DialogueLine[] dialogueLines;
 
     [Header("Click Settings")]
     [SerializeField] private bool canClick = true;
