@@ -26,6 +26,10 @@ public class ClickableObject : MonoBehaviour
     [SerializeField] private HairBrushingMinigame hairBrushingMinigame;
     [SerializeField] private bool startsHairBrushingMinigame;
 
+    [Header("Photo Preview")]
+    [SerializeField] private PhotoPreviewController photoPreviewController;
+    [SerializeField] private bool showsPhotoPreview;
+
     private Collider2D clickCollider;
     private Camera mainCamera;
     private bool isHovering;
@@ -92,9 +96,18 @@ public class ClickableObject : MonoBehaviour
         if (dialogueManager == null)
             return;
 
+        if (showsPhotoPreview && photoPreviewController != null)
+        {
+            photoPreviewController.ShowPhoto();
+        }
+
         if (startsHairBrushingMinigame && hairBrushingMinigame != null)
         {
             dialogueManager.StartDialogue(dialogueLines, hairBrushingMinigame.StartMinigame);
+        }
+        else if (showsPhotoPreview && photoPreviewController != null)
+        {
+            dialogueManager.StartDialogue(dialogueLines, photoPreviewController.HidePhoto);
         }
         else
         {
