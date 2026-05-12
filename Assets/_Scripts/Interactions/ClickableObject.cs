@@ -31,6 +31,7 @@ public class ClickableObject : MonoBehaviour
     [Header("Photo Preview")]
     [SerializeField] private PhotoPreviewController photoPreviewController;
     [SerializeField] private bool showsPhotoPreview;
+    [SerializeField] private Sprite previewSprite;
 
     private Collider2D clickCollider;
     private Camera mainCamera;
@@ -100,7 +101,7 @@ public class ClickableObject : MonoBehaviour
 
         if (showsPhotoPreview && photoPreviewController != null)
         {
-            photoPreviewController.ShowPhoto();
+            photoPreviewController.ShowPhoto(previewSprite);
         }
 
         if (startsHairBrushingMinigame && hairBrushingMinigame != null)

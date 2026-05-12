@@ -1,10 +1,12 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.UI;
+
 public class PhotoPreviewController : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private RectTransform photoPanel;
+    [SerializeField] private Image photoImage;
 
     [Header("Slide Settings")]
     [SerializeField] private Vector2 hiddenPosition = new Vector2(0, -700);
@@ -19,8 +21,13 @@ public class PhotoPreviewController : MonoBehaviour
         photoPanel.gameObject.SetActive(false);
     }
 
-    public void ShowPhoto()
+    public void ShowPhoto(Sprite spriteToShow)
     {
+        if (photoImage != null && spriteToShow != null)
+        {
+            photoImage.sprite = spriteToShow;
+        }
+
         photoPanel.gameObject.SetActive(true);
         SlideTo(shownPosition);
     }
@@ -47,7 +54,6 @@ public class PhotoPreviewController : MonoBehaviour
         {
             timer += Time.deltaTime;
             float t = timer / slideDuration;
-
             t = Mathf.SmoothStep(0f, 1f, t);
 
             photoPanel.anchoredPosition = Vector2.Lerp(startPosition, targetPosition, t);
@@ -60,5 +66,4 @@ public class PhotoPreviewController : MonoBehaviour
         if (disableAfter)
             photoPanel.gameObject.SetActive(false);
     }
-
 }
