@@ -26,6 +26,9 @@ public class ClickableObject : MonoBehaviour
     [SerializeField] private HairBrushingMinigame hairBrushingMinigame;
     [SerializeField] private bool startsHairBrushingMinigame;
 
+    [SerializeField] private DishesMinigame dishesMinigame;
+    [SerializeField] private bool startsDishesMinigame;
+
     [Header("Photo Preview")]
     [SerializeField] private PhotoPreviewController photoPreviewController;
     [SerializeField] private bool showsPhotoPreview;
@@ -104,6 +107,10 @@ public class ClickableObject : MonoBehaviour
         if (startsHairBrushingMinigame && hairBrushingMinigame != null)
         {
             dialogueManager.StartDialogue(dialogueLines, hairBrushingMinigame.StartMinigame);
+        }
+        else if (startsDishesMinigame && dishesMinigame != null)
+        {
+            dialogueManager.StartDialogue(dialogueLines, dishesMinigame.StartMinigame);
         }
         else if (showsPhotoPreview && photoPreviewController != null)
         {
